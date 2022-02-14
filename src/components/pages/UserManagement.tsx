@@ -1,4 +1,4 @@
-import { Spinner, Wrap, WrapItem } from "@chakra-ui/react";
+import { Center, Spinner, Wrap, WrapItem } from "@chakra-ui/react";
 import { memo, useEffect, VFC } from "react";
 
 import { UserCard } from "../organisms/user/UserCard";
@@ -11,15 +11,21 @@ export const UserManagement: VFC = memo(() => {
 
     return (
         <>
-            {loading ? <Spinner /> : (
-                <Wrap p={{ base: 4, md: 10 }}>
-                    <WrapItem>
-                        <UserCard
-                            imageUrl="https://source.unsplash.com/random"
-                            userName="けんと"
-                            fullName="Kento Ikeda"
-                        />
-                    </WrapItem>
+            {loading ? (
+                <Center height="100vh">
+                    <Spinner />
+                </Center>
+            ) : (
+                <Wrap p={{ base: 4, md: 10 }} justify="space-around">
+                    {users.map((user) => (
+                        <WrapItem key={user.id} >
+                            <UserCard
+                                imageUrl="https://source.unsplash.com/random"
+                                userName={user.username}
+                                fullName={user.name}
+                            />
+                        </WrapItem>
+                    ))}
                 </Wrap>
             )}
         </>

@@ -8,9 +8,9 @@ export const useAllUsers = () => {
     const { showMessage } = useMessage();
 
     const [loading, setLoading] = useState(false);
-    const [users, setUsers] = useState<Array<User>>();
+    const [users, setUsers] = useState<Array<User>>([]);
 
-    const getUsers = () => useCallback(() => {
+    const getUsers = useCallback(() => {
         setLoading(true);
         axios
             .get("https://jsonplaceholder.typicode.com/users")
