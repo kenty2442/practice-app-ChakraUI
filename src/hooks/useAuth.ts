@@ -4,10 +4,12 @@ import { useHistory } from "react-router";
 
 import { User } from "../types/api/user";
 import { useMessage } from "./useMessage";
+import { useLoginUser } from "../hooks/useLoginUser"
 
 export const useAuth = () => {
     const history = useHistory();
     const { showMessage } = useMessage();
+    const { setLoginUser } = useLoginUser();
 
     const [loading, setLoading] = useState(false);
 
@@ -15,17 +17,22 @@ export const useAuth = () => {
         setLoading(true);
         axios.get<User>(`https://jsonplaceholder.typicode.com/users/${id}`).then((res) => {
             if (res.data) {
+                //模擬管理者としてID10を設定する
+                const isAdmin = res.data.id === 10 ? true : false;
+                setLoginUser({ ...res.data, isAdmin })
                 showMessage({ title: "ログインに成功しました", status: "success" })
                 history.push("/home");
             } else {
-                showMessage({ title: "ユーザーが見つかりません", status: "error" })
+                showMessage({ title: "ユーザーが見つかりません", status: "error" });
+                setLoading(false);
             }
         })
-            .catch(() => showMessage({ title: "ログインできません", status: "error" })
-            )
-            .finally(() => setLoading(false));
+            .catch(() => {
+                showMessage({ title: "ログインできません", status: "error" });
+                setLoading(false);
+            });
     },
-        [history]
+        [history, showMessage, setLoginUser]
     );
     return { login, loading }
 }
